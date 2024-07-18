@@ -13,6 +13,11 @@ pub fn main() !void {
         .height = FIELD_HEIGHT,
     };
 
-    try mines.generate(10);
-    try field.render(size);
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    const allocator = gpa.allocator();
+    var list = std.ArrayList(u32).init(allocator);
+    defer list.deinit();
+
+    try mines.generate(10, size, &list);
+    try field.render(size, &list);
 }
