@@ -14,4 +14,15 @@ pub fn generate(amount: u32, size: field.Size, list: *std.ArrayList(cell.Cell)) 
 
         try list.append(c);
     }
+
+    var prng = std.rand.DefaultPrng.init(blk: {
+        var seed: u64 = undefined;
+        try std.posix.getrandom(std.mem.asBytes(&seed));
+        break :blk seed;
+    });
+
+    const rand = prng.random();
+    const o = list.allocatedSlice();
+
+    rand.shuffle(cell.Cell, o);
 }
